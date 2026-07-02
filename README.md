@@ -137,6 +137,68 @@ Expected dataset files:
 - `outputs/repro_v731_dataset_smoke/dataset/common_episode_seed73130.npz`
 - `outputs/repro_v731_dataset_smoke/dataset/manifest_seed73130.json`
 
+## Generate MuJoCo Training Data
+
+For MuJoCo-first training, use the batch generator. It runs the v731 controller
+without video, writes one `front110_common_v1` NPZ/manifest pair per episode,
+and builds three indexes:
+
+- `batch_index.json`: every episode.
+- `batch_index_success_episodes.json`: only episodes where every drop passed the strict grasp check.
+- `batch_index_partial_episodes.json`: episodes with at least one failed drop, useful for diagnostics or negative/failure-aware training.
+
+Recommended first training set: load `batch_index_success_episodes.json`.
+
+Example low-dimensional dataset batch:
+
+```bash
+export MUJOCO_GL=osmesa
+PYTHONPATH=. python scripts/generate_front110_common_dataset_batch.py \
+  --episodes 100 \
+  --seed-start 76000 \
+  --num-tools 6 \
+  --angle-mode fixed6 \
+  --dataset-stride 4 \
+  --width 640 \
+  --height 360 \
+  --name v731_fixed6_train_ep100_seed76000
+```
+
+The default output root is:
+
+```text
+/autodl-fs/data/mingyu/mujoco_front110_common_datasets/
+```
+
+Use `--out-root /path/to/datasets` on another machine.
+
+Angle modes:
+
+- `fixed6`: six stable front-sector representative angles `[38.5, 56.7, 74.0, 88.0, 116.5, 143.0]`, with randomized release order per episode.
+- `continuous`: uniformly samples continuous angles in `[35,145] deg` per episode.
+- `grid5`: samples from a 5-degree front-sector grid.
+- `runner_default`: delegates angle sampling to the v731 runner.
+
+The generated NPZ files include the aligned low-dimensional fields:
+
+- `fr3_qpos`, `fr3_qvel`
+- `revo2_active_qpos`, `revo2_active_qvel`
+- `tool_pos_world`, `tool_quat_wxyz`, `tool_linvel_world`, `tool_angvel_world`
+- `action_fr3_joint_target`, `action_revo2_active_target`
+- `phase`, `active_tool_index`, `contact_flags`, `sim_time_s`
+
+Validation batch from the development machine:
+
+```text
+v731_fixed6_train_ep100_seed76000_20260702_145850
+episodes: 100
+total drops: 600
+strict passed: 569 / 600
+success rate: 94.83%
+clean all-success subset: 75 episodes, 450 / 450 drops
+recorded low-dimensional frames: 210822
+```
+
 Smoke-test the IsaacGym tensor bridge without launching IsaacGym:
 
 ```bash
