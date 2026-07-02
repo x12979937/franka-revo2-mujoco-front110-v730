@@ -1,0 +1,130 @@
+<mujoco model="franka_brainco_revo2_right">
+  <compiler angle="radian" meshdir="/autodl-fs/data/mingyu/Mujoco/projects/franka_revo2_v699_mujoco/assets/full_robot_urdf_mirror" />
+
+  <option timestep="0.002" gravity="0 0 -9.81" integrator="implicitfast" iterations="80" /><asset>
+    <mesh name="link0" file="link0_visual_aligned_v728.stl" />
+    <mesh name="link1" file="link1_visual_aligned_v728.stl" />
+    <mesh name="link2" file="link2_visual_aligned_v728.stl" />
+    <mesh name="link3" file="link3_visual_aligned_v728.stl" />
+    <mesh name="link4" file="link4_visual_aligned_v728.stl" />
+    <mesh name="link5" file="link5_visual_aligned_v728.stl" />
+    <mesh name="link6" file="link6_visual_aligned_v728.stl" />
+    <mesh name="link7" file="link7_visual_aligned_v728.stl" />
+    <mesh name="right_base_link" file="right_base_link.STL" />
+    <mesh name="right_thumb_metacarpal_link" file="right_thumb_metacarpal_link.STL" />
+    <mesh name="right_thumb_proximal_link" file="right_thumb_proximal_link.STL" />
+    <mesh name="right_thumb_distal_link" file="right_thumb_distal_link.STL" />
+    <mesh name="right_thumb_touch_link" file="right_thumb_touch_link.STL" />
+    <mesh name="right_index_proximal_link" file="right_index_proximal_link.STL" />
+    <mesh name="right_index_distal_link" file="right_index_distal_link.STL" />
+    <mesh name="right_index_touch_link" file="right_index_touch_link.STL" />
+    <mesh name="right_middle_proximal_link" file="right_middle_proximal_link.STL" />
+    <mesh name="right_middle_distal_link" file="right_middle_distal_link.STL" />
+    <mesh name="right_middle_touch_link" file="right_middle_touch_link.STL" />
+    <mesh name="right_ring_proximal_link" file="right_ring_proximal_link.STL" />
+    <mesh name="right_ring_distal_link" file="right_ring_distal_link.STL" />
+    <mesh name="right_ring_touch_link" file="right_ring_touch_link.STL" />
+    <mesh name="right_pinky_proximal_link" file="right_pinky_proximal_link.STL" />
+    <mesh name="right_pinky_distal_link" file="right_pinky_distal_link.STL" />
+    <mesh name="right_pinky_touch_link" file="right_pinky_touch_link.STL" />
+  <texture name="soft_lab_sky" type="skybox" builtin="flat" rgb1="0.78 0.82 0.86" rgb2="0.78 0.82 0.86" width="64" height="64" /></asset>
+
+  <worldbody>
+    <geom type="mesh" mesh="link0" contype="0" conaffinity="0" />
+    <body name="panda_link1" pos="0 0 0.333" gravcomp="1">
+      <joint name="panda_joint1" pos="0 0 0" axis="0 0 1" range="-2.8973 2.8973" actuatorfrcrange="-87 87" damping="4.0" armature="0.05" />
+      <geom type="mesh" mesh="link1" contype="0" conaffinity="0" />
+      <body name="panda_link2" quat="0.707107 -0.707107 0 0" gravcomp="1">
+        <joint name="panda_joint2" pos="0 0 0" axis="0 0 1" range="-1.7628 1.7628" actuatorfrcrange="-87 87" damping="4.0" armature="0.05" />
+        <geom type="mesh" mesh="link2" contype="0" conaffinity="0" />
+        <body name="panda_link3" pos="0 -0.316 0" quat="0.707107 0.707107 0 0" gravcomp="1">
+          <joint name="panda_joint3" pos="0 0 0" axis="0 0 1" range="-2.8973 2.8973" actuatorfrcrange="-87 87" damping="4.0" armature="0.05" />
+          <geom type="mesh" mesh="link3" contype="0" conaffinity="0" />
+          <body name="panda_link4" pos="0.0825 0 0" quat="0.707107 0.707107 0 0" gravcomp="1">
+            <joint name="panda_joint4" pos="0 0 0" axis="0 0 1" range="-3.0718 -0.0698" actuatorfrcrange="-87 87" damping="4.0" armature="0.05" />
+            <geom type="mesh" mesh="link4" contype="0" conaffinity="0" />
+            <body name="panda_link5" pos="-0.0825 0.384 0" quat="0.707107 -0.707107 0 0" gravcomp="1">
+              <joint name="panda_joint5" pos="0 0 0" axis="0 0 1" range="-2.8973 2.8973" actuatorfrcrange="-12 12" damping="4.0" armature="0.05" />
+              <geom type="mesh" mesh="link5" contype="0" conaffinity="0" />
+              <body name="panda_link6" quat="0.707107 0.707107 0 0" gravcomp="1">
+                <joint name="panda_joint6" pos="0 0 0" axis="0 0 1" range="-0.0175 3.7525" actuatorfrcrange="-12 12" damping="4.0" armature="0.05" />
+                <geom type="mesh" mesh="link6" contype="0" conaffinity="0" />
+                <body name="panda_link7" pos="0.088 0 0" quat="0.707107 0.707107 0 0" gravcomp="1">
+                  <joint name="panda_joint7" pos="0 0 0" axis="0 0 1" range="-2.8973 2.8973" actuatorfrcrange="-12 12" damping="4.0" armature="0.05" />
+                  <geom type="mesh" mesh="link7" contype="0" conaffinity="0" />
+                  <geom size="0.034 0.004" pos="0 0 0.111" quat="0.92388 0 0 -0.382683" type="cylinder" rgba="0.35 0.35 0.35 1" contype="0" conaffinity="0" />
+                  <geom size="0.018 0.0212" pos="0 0 0.1362" quat="0.92388 0 0 -0.382683" type="cylinder" rgba="0.35 0.35 0.35 1" contype="0" conaffinity="0" />
+                  <geom size="0.028 0.004" pos="0 0 0.1614" quat="0.92388 0 0 -0.382683" type="cylinder" rgba="0.35 0.35 0.35 1" contype="0" conaffinity="0" />
+                  <geom pos="0 0 0.1654" quat="0.382683 0 0 0.92388" type="mesh" rgba="0.04 0.1 0.22 1" mesh="right_base_link" contype="0" conaffinity="0" />
+                  <body name="revo2_right_thumb_metacarpal_link" pos="-0.0180213 -0.0100749 0.193225" quat="0.458791 0 0 0.888544" gravcomp="1">
+                    <inertial pos="1.51106e-05 0.00707243 -0.00420847" quat="0.465075 -0.0302438 0.0586743 0.882807" mass="0.01" diaginertia="1.66115e-07 1.56006e-07 4.9387e-08" />
+                    <joint name="revo2_right_thumb_metacarpal_joint" pos="0 0 0" axis="0 0 -1" range="0 1.57" actuatorfrcrange="-0.5 0.5" damping="0.35" armature="0.006" />
+                    <geom type="mesh" rgba="0.04 0.1 0.22 1" mesh="right_thumb_metacarpal_link" contype="0" conaffinity="0" />
+                    <body name="revo2_right_thumb_proximal_link" pos="0 0.014227 0" quat="0.986557 0.0765206 0.124804 0.0726253" gravcomp="1">
+                      <inertial pos="-4.6972e-07 0.0277015 -0.00202656" quat="0.496496 0.503512 -0.503514 0.496429" mass="0.05" diaginertia="2.56295e-06 2.40452e-06 5.11916e-07" />
+                      <joint name="revo2_right_thumb_proximal_joint" pos="0 0 0" axis="1 0 0" range="0 1.03" actuatorfrcrange="-1.1 1.1" damping="0.35" armature="0.006" />
+                      <geom type="mesh" rgba="0.04 0.1 0.22 1" mesh="right_thumb_proximal_link" contype="0" conaffinity="0" />
+                      <body name="revo2_right_thumb_distal_link" pos="0 0.052 0" gravcomp="1">
+                        <inertial pos="-6.86982e-09 0.0117545 1.13288e-05" quat="0.528527 0.469685 -0.46966 0.528654" mass="0.012" diaginertia="4.42072e-07 3.35587e-07 2.27759e-07" />
+                        <joint name="revo2_right_thumb_distal_joint" pos="0 0 0" axis="1 0 0" range="0 1.03" actuatorfrcrange="-1.1 1.1" damping="0.35" armature="0.006" />
+                        <geom type="mesh" rgba="0.04 0.1 0.22 1" mesh="right_thumb_distal_link" contype="0" conaffinity="0" />
+                        <geom pos="0 0.0137928 0.0076766" quat="0.999443 -0.033369 0 0" type="mesh" rgba="0.18 0.18 0.2 1" mesh="right_thumb_touch_link" contype="1" conaffinity="1" friction="2.80 0.08 0.008" />
+                        <geom size="0.012 0.009 0.013" pos="0 0.0127283 0.00674553" quat="0.999443 -0.033369 0 0" type="box" rgba="0.18 0.18 0.2 1" contype="1" conaffinity="1" friction="2.80 0.08 0.008" />
+                      <geom name="stage4_thumb_tip_marker" type="sphere" pos="0 0.0127283 0.00674553" size="0.014" rgba="0.1 0.2 1.0 0.16" contype="0" conaffinity="0" /></body>
+                    </body>
+                  </body>
+                  <body name="revo2_right_index_proximal_link" pos="-0.01941 -0.0224055 0.246276" quat="0.455694 -0.092407 -0.018312 0.885138" gravcomp="1">
+                    <inertial pos="-0.00223495 3.15875e-06 0.0176402" quat="0.9998 0.000578854 0.0200071 0.00015863" mass="0.009" diaginertia="2.52201e-07 2.36436e-07 9.27798e-08" />
+                    <joint name="revo2_right_index_proximal_joint" pos="0 0 0" axis="0 1 0" range="0 1.41" actuatorfrcrange="-2 2" damping="0.35" armature="0.006" />
+                    <geom type="mesh" rgba="0.04 0.1 0.22 1" mesh="right_index_proximal_link" contype="0" conaffinity="0" />
+                    <body name="revo2_right_index_distal_link" pos="0 0 0.032" gravcomp="1">
+                      <inertial pos="0.00506251 1.61615e-07 0.0165189" quat="0.684726 0.176495 0.176496 0.684726" mass="0.011" diaginertia="7.85555e-07 7.71534e-07 8.73346e-08" />
+                      <joint name="revo2_right_index_distal_joint" pos="0 0 0" axis="0 1 0" range="0 1.63" actuatorfrcrange="-2 2" damping="0.35" armature="0.006" />
+                      <geom type="mesh" rgba="0.04 0.1 0.22 1" mesh="right_index_distal_link" contype="0" conaffinity="0" />
+                      <geom pos="0.014497 0 0.023303" quat="0.6361 0.734769 0.154182 -0.178098" type="mesh" rgba="0.18 0.18 0.2 1" mesh="right_index_touch_link" contype="1" conaffinity="1" friction="2.80 0.08 0.008" />
+                      <geom size="0.011 0.009 0.013" pos="0.0131721 -0.00014321 0.0250986" quat="0.6361 0.734769 0.154182 -0.178098" type="box" rgba="0.18 0.18 0.2 1" contype="1" conaffinity="1" friction="2.80 0.08 0.008" />
+                    <geom name="stage4_index_tip_marker" type="sphere" pos="0.0131721 -0.00014321 0.0250986" size="0.014" rgba="1.0 0.70 0.05 0.16" contype="0" conaffinity="0" /></body>
+                  </body>
+                  <body name="revo2_right_middle_proximal_link" pos="-0.00387091 -0.0103433 0.250393" quat="0.406762 -0.0756337 0.0123612 0.910314" gravcomp="1">
+                    <inertial pos="-0.00222511 5.25632e-06 0.0203008" quat="0.999816 0.00054813 0.0191911 0.000563992" mass="0.009" diaginertia="3.67373e-07 3.52646e-07 1.11857e-07" />
+                    <joint name="revo2_right_middle_proximal_joint" pos="0 0 0" axis="0 1 0" range="0 1.41" actuatorfrcrange="-2 2" damping="0.35" armature="0.006" />
+                    <geom type="mesh" rgba="0.04 0.1 0.22 1" mesh="right_middle_proximal_link" contype="0" conaffinity="0" />
+                    <body name="revo2_right_middle_distal_link" pos="0 0 0.037" gravcomp="1">
+                      <inertial pos="0.00591597 -2.75379e-08 0.0190796" quat="0.6873 0.166308 0.166321 0.687239" mass="0.011" diaginertia="1.06828e-06 1.04938e-06 1.11406e-07" />
+                      <joint name="revo2_right_middle_distal_joint" pos="0 0 0" axis="0 1 0" range="0 1.63" actuatorfrcrange="-2 2" damping="0.35" armature="0.006" />
+                      <geom type="mesh" rgba="0.04 0.1 0.22 1" mesh="right_middle_distal_link" contype="0" conaffinity="0" />
+                      <geom pos="0.0159759 0 0.0265894" quat="0.971858 0 0.235566 0" type="mesh" rgba="0.18 0.18 0.2 1" mesh="right_middle_touch_link" contype="1" conaffinity="1" friction="2.80 0.08 0.008" />
+                      <geom size="0.011 0.009 0.013" pos="0.0151136 0 0.0292832" quat="0.971858 0 0.235566 0" type="box" rgba="0.18 0.18 0.2 1" contype="1" conaffinity="1" friction="2.80 0.08 0.008" />
+                    <geom name="stage4_middle_tip_marker" type="sphere" pos="0.0151136 0 0.0292832" size="0.014" rgba="1.0 0.70 0.05 0.16" contype="0" conaffinity="0" /></body>
+                  </body>
+                  <body name="revo2_right_ring_proximal_link" pos="0.0104001 0.00379441 0.249382" quat="0.356089 -0.0617138 0.0445464 0.931347" gravcomp="1">
+                    <inertial pos="-0.00234495 5.87955e-06 0.0191774" quat="0.999831 0.000632097 0.0183324 0.000717657" mass="0.009" diaginertia="3.14463e-07 2.97613e-07 1.01829e-07" />
+                    <joint name="revo2_right_ring_proximal_joint" pos="0 0 0" axis="0 1 0" range="0 1.41" actuatorfrcrange="-2 2" damping="0.35" armature="0.006" />
+                    <geom type="mesh" rgba="0.04 0.1 0.22 1" mesh="right_ring_proximal_link" contype="0" conaffinity="0" />
+                    <body name="revo2_right_ring_distal_link" pos="0 0 0.035" gravcomp="1">
+                      <inertial pos="0.00570078 5.57858e-08 0.0185997" quat="0.686867 0.167968 0.167968 0.686867" mass="0.011" diaginertia="1.01271e-06 9.96672e-07 1.02706e-07" />
+                      <joint name="revo2_right_ring_distal_joint" pos="0 0 0" axis="0 1 0" range="0 1.63" actuatorfrcrange="-2 2" damping="0.35" armature="0.006" />
+                      <geom type="mesh" rgba="0.04 0.1 0.22 1" mesh="right_ring_distal_link" contype="0" conaffinity="0" />
+                      <geom pos="0.0154392 0 0.0260561" quat="0.971858 0 0.235566 0" type="mesh" rgba="0.18 0.18 0.2 1" mesh="right_ring_touch_link" contype="0" conaffinity="0" />
+                    </body>
+                  </body>
+                  <body name="revo2_right_pinky_proximal_link" pos="0.0224313 0.0190985 0.244094" quat="0.30376 -0.0511895 0.0779066 0.948177" gravcomp="1">
+                    <inertial pos="-0.00213212 7.75039e-06 0.0160672" quat="0.999803 0.000555178 0.0198191 0.000562874" mass="0.009" diaginertia="1.97745e-07 1.82023e-07 8.19805e-08" />
+                    <joint name="revo2_right_pinky_proximal_joint" pos="0 0 0" axis="0 1 0" range="0 1.41" actuatorfrcrange="-2 2" damping="0.35" armature="0.006" />
+                    <geom type="mesh" rgba="0.04 0.1 0.22 1" mesh="right_pinky_proximal_link" contype="0" conaffinity="0" />
+                    <body name="revo2_right_pinky_distal_link" pos="0 0 0.029" gravcomp="1">
+                      <inertial pos="0.00473738 -1.62934e-07 0.0150053" quat="0.682052 0.186478 0.186456 0.682103" mass="0.011" diaginertia="6.20818e-07 6.07614e-07 8.1918e-08" />
+                      <joint name="revo2_right_pinky_distal_joint" pos="0 0 0" axis="0 1 0" range="0 1.63" actuatorfrcrange="-2 2" damping="0.35" armature="0.006" />
+                      <geom type="mesh" rgba="0.04 0.1 0.22 1" mesh="right_pinky_distal_link" contype="0" conaffinity="0" />
+                      <geom pos="0.01401 0 0.021124" quat="0.971859 0 0.235565 0" type="mesh" rgba="0.18 0.18 0.2 1" mesh="right_pinky_touch_link" contype="0" conaffinity="0" />
+                    </body>
+                  </body>
+                </body>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+    </body>
+  <light pos="0 -2 4" dir="0 0 -1" diffuse="0.9 0.9 0.9" /><camera name="front_arc" pos="0 -1.9 1.15" xyaxes="1 0 0 0 0.50 0.86" fovy="48" /><camera name="top_oblique" pos="0.0 -1.25 1.75" xyaxes="1 0 0 0 0.84 0.54" fovy="52" /><geom name="floor" type="plane" size="2 2 0.02" rgba="0.32 0.32 0.32 1" friction="0.8 0.01 0.001" /><camera name="wide_front" pos="0 -2.85 1.55" xyaxes="1 0 0 0 0.43 0.90" fovy="62" /><camera name="wide_top_oblique" pos="0.0 -2.05 2.35" xyaxes="1 0 0 0 0.74 0.67" fovy="66" /><body name="tool0" pos="0.409576 0.286788 1.150000" quat="1 0 0 0"><freejoint name="tool_free_0" /><inertial pos="0 0 0.055" mass="0.125" diaginertia="0.00115 0.00115 0.000035" /><geom name="handle_positive_0" type="capsule" fromto="0 0 -0.11 0 0 0.00" size="0.015" rgba="0.05 0.75 0.25 0.60" friction="2.80 0.080 0.008" /><geom name="functional_negative_0" type="capsule" fromto="0 0 0.00 0 0 0.22" size="0.015" rgba="0.70 0.05 0.04 0.60" friction="0.55 0.010 0.001" /></body><body name="tool1" pos="0.404508 0.293893 1.150000" quat="1 0 0 0"><freejoint name="tool_free_1" /><inertial pos="0 0 0.055" mass="0.125" diaginertia="0.00115 0.00115 0.000035" /><geom name="handle_positive_1" type="capsule" fromto="0 0 -0.11 0 0 0.00" size="0.015" rgba="0.05 0.75 0.25 0.60" friction="2.80 0.080 0.008" /><geom name="functional_negative_1" type="capsule" fromto="0 0 0.00 0 0 0.22" size="0.015" rgba="0.70 0.05 0.04 0.60" friction="0.55 0.010 0.001" /></body><body name="tool2" pos="0.399318 0.300908 1.150000" quat="1 0 0 0"><freejoint name="tool_free_2" /><inertial pos="0 0 0.055" mass="0.125" diaginertia="0.00115 0.00115 0.000035" /><geom name="handle_positive_2" type="capsule" fromto="0 0 -0.11 0 0 0.00" size="0.015" rgba="0.05 0.75 0.25 0.60" friction="2.80 0.080 0.008" /><geom name="functional_negative_2" type="capsule" fromto="0 0 0.00 0 0 0.22" size="0.015" rgba="0.70 0.05 0.04 0.60" friction="0.55 0.010 0.001" /></body><body name="tool3" pos="0.394005 0.307831 1.150000" quat="1 0 0 0"><freejoint name="tool_free_3" /><inertial pos="0 0 0.055" mass="0.125" diaginertia="0.00115 0.00115 0.000035" /><geom name="handle_positive_3" type="capsule" fromto="0 0 -0.11 0 0 0.00" size="0.015" rgba="0.05 0.75 0.25 0.60" friction="2.80 0.080 0.008" /><geom name="functional_negative_3" type="capsule" fromto="0 0 0.00 0 0 0.22" size="0.015" rgba="0.70 0.05 0.04 0.60" friction="0.55 0.010 0.001" /></body><body name="tool4" pos="0.388573 0.314660 1.150000" quat="1 0 0 0"><freejoint name="tool_free_4" /><inertial pos="0 0 0.055" mass="0.125" diaginertia="0.00115 0.00115 0.000035" /><geom name="handle_positive_4" type="capsule" fromto="0 0 -0.11 0 0 0.00" size="0.015" rgba="0.05 0.75 0.25 0.60" friction="2.80 0.080 0.008" /><geom name="functional_negative_4" type="capsule" fromto="0 0 0.00 0 0 0.22" size="0.015" rgba="0.70 0.05 0.04 0.60" friction="0.55 0.010 0.001" /></body><body name="tool5" pos="0.383022 0.321394 1.150000" quat="1 0 0 0"><freejoint name="tool_free_5" /><inertial pos="0 0 0.055" mass="0.125" diaginertia="0.00115 0.00115 0.000035" /><geom name="handle_positive_5" type="capsule" fromto="0 0 -0.11 0 0 0.00" size="0.015" rgba="0.05 0.75 0.25 0.60" friction="2.80 0.080 0.008" /><geom name="functional_negative_5" type="capsule" fromto="0 0 0.00 0 0 0.22" size="0.015" rgba="0.70 0.05 0.04 0.60" friction="0.55 0.010 0.001" /></body><body name="tool6" pos="0.377355 0.328030 1.150000" quat="1 0 0 0"><freejoint name="tool_free_6" /><inertial pos="0 0 0.055" mass="0.125" diaginertia="0.00115 0.00115 0.000035" /><geom name="handle_positive_6" type="capsule" fromto="0 0 -0.11 0 0 0.00" size="0.015" rgba="0.05 0.75 0.25 0.60" friction="2.80 0.080 0.008" /><geom name="functional_negative_6" type="capsule" fromto="0 0 0.00 0 0 0.22" size="0.015" rgba="0.70 0.05 0.04 0.60" friction="0.55 0.010 0.001" /></body><body name="tool7" pos="0.371572 0.334565 1.150000" quat="1 0 0 0"><freejoint name="tool_free_7" /><inertial pos="0 0 0.055" mass="0.125" diaginertia="0.00115 0.00115 0.000035" /><geom name="handle_positive_7" type="capsule" fromto="0 0 -0.11 0 0 0.00" size="0.015" rgba="0.05 0.75 0.25 0.60" friction="2.80 0.080 0.008" /><geom name="functional_negative_7" type="capsule" fromto="0 0 0.00 0 0 0.22" size="0.015" rgba="0.70 0.05 0.04 0.60" friction="0.55 0.010 0.001" /></body><body name="tool8" pos="0.365677 0.340999 1.150000" quat="1 0 0 0"><freejoint name="tool_free_8" /><inertial pos="0 0 0.055" mass="0.125" diaginertia="0.00115 0.00115 0.000035" /><geom name="handle_positive_8" type="capsule" fromto="0 0 -0.11 0 0 0.00" size="0.015" rgba="0.05 0.75 0.25 0.60" friction="2.80 0.080 0.008" /><geom name="functional_negative_8" type="capsule" fromto="0 0 0.00 0 0 0.22" size="0.015" rgba="0.70 0.05 0.04 0.60" friction="0.55 0.010 0.001" /></body><body name="tool9" pos="0.359670 0.347329 1.150000" quat="1 0 0 0"><freejoint name="tool_free_9" /><inertial pos="0 0 0.055" mass="0.125" diaginertia="0.00115 0.00115 0.000035" /><geom name="handle_positive_9" type="capsule" fromto="0 0 -0.11 0 0 0.00" size="0.015" rgba="0.05 0.75 0.25 0.60" friction="2.80 0.080 0.008" /><geom name="functional_negative_9" type="capsule" fromto="0 0 0.00 0 0 0.22" size="0.015" rgba="0.70 0.05 0.04 0.60" friction="0.55 0.010 0.001" /></body><body name="tool10" pos="0.353553 0.353553 1.150000" quat="1 0 0 0"><freejoint name="tool_free_10" /><inertial pos="0 0 0.055" mass="0.125" diaginertia="0.00115 0.00115 0.000035" /><geom name="handle_positive_10" type="capsule" fromto="0 0 -0.11 0 0 0.00" size="0.015" rgba="0.05 0.75 0.25 0.60" friction="2.80 0.080 0.008" /><geom name="functional_negative_10" type="capsule" fromto="0 0 0.00 0 0 0.22" size="0.015" rgba="0.70 0.05 0.04 0.60" friction="0.55 0.010 0.001" /></body><camera name="full_body_three_quarter" pos="1.350000 -2.150000 1.420000" xyaxes="0.888120 0.459611 -0.000000 -0.084312 0.162919 0.983030" fovy="46" /><camera name="full_body_front_arc" pos="0.000000 -2.550000 1.460000" xyaxes="1.000000 -0.000000 0.000000 0.000000 0.190430 0.981701" fovy="48" /><camera name="fall_path_high_arc" pos="0.000000 -1.580000 2.380000" xyaxes="1.000000 -0.000000 0.000000 0.000000 0.584305 0.811534" fovy="54" /><camera name="side_reach_profile" pos="2.050000 -0.580000 1.360000" xyaxes="0.445449 0.895308 -0.000000 -0.192800 0.095925 0.976538" fovy="43" /><camera name="hand_window_close" pos="0.700000 -0.920000 1.100000" xyaxes="0.901919 0.431905 -0.000000 -0.070372 0.146953 0.986637" fovy="27" /><light name="front_area_key" pos="0 -2.4 3.2" dir="0 0.62 -1" diffuse="0.72 0.72 0.70" specular="0.05 0.05 0.05" /><light name="left_fill_soft" pos="-2.0 -0.4 2.0" dir="0.8 0.1 -1" diffuse="0.38 0.40 0.42" specular="0.02 0.02 0.02" /><light name="right_fill_soft" pos="2.0 -0.8 2.2" dir="-0.8 0.2 -1" diffuse="0.42 0.42 0.42" specular="0.02 0.02 0.02" /></worldbody>
+<visual><global offwidth="2048" offheight="1152" /><headlight ambient="0.55 0.55 0.55" diffuse="0.78 0.78 0.76" specular="0.06 0.06 0.06" /><rgba haze="0.78 0.82 0.86 1" /></visual><actuator><position name="panda_joint1_pos" joint="panda_joint1" kp="220" ctrllimited="true" ctrlrange="-2.8973 2.8973" /><position name="panda_joint2_pos" joint="panda_joint2" kp="220" ctrllimited="true" ctrlrange="-1.7628 1.7628" /><position name="panda_joint3_pos" joint="panda_joint3" kp="220" ctrllimited="true" ctrlrange="-2.8973 2.8973" /><position name="panda_joint4_pos" joint="panda_joint4" kp="220" ctrllimited="true" ctrlrange="-3.0718 -0.0698" /><position name="panda_joint5_pos" joint="panda_joint5" kp="220" ctrllimited="true" ctrlrange="-2.8973 2.8973" /><position name="panda_joint6_pos" joint="panda_joint6" kp="220" ctrllimited="true" ctrlrange="-0.0175 3.7525" /><position name="panda_joint7_pos" joint="panda_joint7" kp="220" ctrllimited="true" ctrlrange="-2.8973 2.8973" /><position name="revo2_right_thumb_metacarpal_joint_pos" joint="revo2_right_thumb_metacarpal_joint" kp="180" ctrllimited="true" ctrlrange="0 1.57" /><position name="revo2_right_thumb_proximal_joint_pos" joint="revo2_right_thumb_proximal_joint" kp="180" ctrllimited="true" ctrlrange="0 1.03" /><position name="revo2_right_thumb_distal_joint_pos" joint="revo2_right_thumb_distal_joint" kp="180" ctrllimited="true" ctrlrange="0 1.03" /><position name="revo2_right_index_proximal_joint_pos" joint="revo2_right_index_proximal_joint" kp="180" ctrllimited="true" ctrlrange="0 1.41" /><position name="revo2_right_index_distal_joint_pos" joint="revo2_right_index_distal_joint" kp="180" ctrllimited="true" ctrlrange="0 1.63" /><position name="revo2_right_middle_proximal_joint_pos" joint="revo2_right_middle_proximal_joint" kp="180" ctrllimited="true" ctrlrange="0 1.41" /><position name="revo2_right_middle_distal_joint_pos" joint="revo2_right_middle_distal_joint" kp="180" ctrllimited="true" ctrlrange="0 1.63" /><position name="revo2_right_ring_proximal_joint_pos" joint="revo2_right_ring_proximal_joint" kp="180" ctrllimited="true" ctrlrange="0 1.41" /><position name="revo2_right_ring_distal_joint_pos" joint="revo2_right_ring_distal_joint" kp="180" ctrllimited="true" ctrlrange="0 1.63" /><position name="revo2_right_pinky_proximal_joint_pos" joint="revo2_right_pinky_proximal_joint" kp="180" ctrllimited="true" ctrlrange="0 1.41" /><position name="revo2_right_pinky_distal_joint_pos" joint="revo2_right_pinky_distal_joint" kp="180" ctrllimited="true" ctrlrange="0 1.63" /></actuator></mujoco>
