@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import numpy as np
 import sys
+import tempfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -12,6 +13,8 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from front110_core.backends.isaacgym_backend import IsaacGymTensorAdapter
+from front110_core.dataset_adapter import validate_npz
+from front110_core.isaacgym_runner_bridge import IsaacGymCommonDatasetHook
 from front110_core.planner import UnifiedAction
 from front110_core.transforms import revo2_active_to_isaac_internal, revo2_isaac_internal_to_active
 
@@ -87,7 +90,26 @@ def main():
     obs_all = adapter.get_observation(env_id=None)
     assert obs_all["fr3_qpos"].shape == (2, 7)
     assert obs_all["tool_pos_world"].shape == (2, 2, 3)
-    print("isaacgym adapter smoke passed")
+
+    with tempfile.TemporaryDirectory() as tmp:
+        hook = IsaacGymCommonDatasetHook(env=env, out_dir=Path(tmp), stride=1, validate=True)
+        hook.start_episode(ep=0, num_tools=2)
+        hook.record_step(
+            step=0,
+            sim_time_s=0.0,
+            arm_target=action.fr3_joint_target,
+            hand_internal_target=isaac_internal,
+            phase="smoke",
+            active_tool_index=1,
+            thumb_contact=True,
+            opposing_finger_contact=True,
+        )
+        npz = hook.save_episode({"seed": 1, "success": True, "total": 1, "release_order_angles_deg": [90.0]})
+        assert npz is not None and npz.exists()
+        assert (Path(tmp) / "manifest_ep000.json").exists()
+        validate_npz(npz)
+
+    print("isaacgym adapter and runner bridge smoke passed")
 
 
 if __name__ == "__main__":

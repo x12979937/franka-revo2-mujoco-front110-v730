@@ -10,6 +10,8 @@ Compact reproduction package for the MuJoCo version of the front 110 degree aeri
 - frozen stage-4 controller dependency: `frozen/stage4e_front110_v700_grid0p5_patch.py`
 - high-fidelity FR3/Revo2 visual/contact assets: `assets/full_robot_urdf_mirror/`
 - common planner/action/dataset adapter: `front110_core/`
+- IsaacGym v490 runner with common dataset hooks:
+  `scripts/run_isaacgym_front110_common_dataset_v490.py`
 - validation artifacts:
   - `outputs/front110_v730_dense_1deg_batches_seed72900/dense_1deg_summary.json`
   - `outputs/front110_v730_grid9_clean_video/`
@@ -113,6 +115,7 @@ python scripts/render_front110_multi_clean_v731_midleft_redclearance_patch.py \
 - `front110_core.backends.mujoco_backend`: extracts low-dimensional MuJoCo observations and applies the legacy 11-DoF converted Revo2 target.
 - `front110_core.backends.isaacgym_backend`: IsaacGym tensor adapter for Dynamic_Gym-style envs, including FR3/Revo2 DOF mapping, `cur_targets` writes, root/body tensor observation export, and `xyzw <-> wxyz` quaternion conversion.
 - `front110_core.dataset_adapter`: writes and validates `front110_common_v1` NPZ episodes plus JSON manifests.
+- `front110_core.isaacgym_runner_bridge`: small runner hook that records an IsaacGym rollout with the same `UnifiedAction` and `EpisodeRecorder` used by the MuJoCo scripts.
 
 Generate a small aligned dataset sample:
 
@@ -140,6 +143,38 @@ Smoke-test the IsaacGym tensor bridge without launching IsaacGym:
 python scripts/smoke_isaacgym_adapter.py
 ```
 
+Check whether the current machine has the full IsaacGym/Dynamic_Gym runtime
+needed for a real rollout:
+
+```bash
+export LD_LIBRARY_PATH=/path/to/isaacgym_py38/lib:$LD_LIBRARY_PATH
+export PYTHONPATH=/path/to/Dynamic_Gym/src/Dynamic_Gym-sim-env-franka-revo2-aerial-v1:/path/to/isaacgymenvs_parent:$PYTHONPATH
+/path/to/isaacgym_py38/bin/python scripts/check_isaacgym_front110_runtime.py \
+  --dynamic-gym-root /path/to/Dynamic_Gym/src/Dynamic_Gym-sim-env-franka-revo2-aerial-v1 \
+  --isaacgymenvs-root /path/to/isaacgymenvs_parent \
+  --strict
+```
+
+Run the v490 IsaacGym runner with common-schema dataset export:
+
+```bash
+export LD_LIBRARY_PATH=/path/to/isaacgym_py38/lib:$LD_LIBRARY_PATH
+export PYTHONPATH=/path/to/Dynamic_Gym/src/Dynamic_Gym-sim-env-franka-revo2-aerial-v1:/path/to/isaacgymenvs_parent:$PYTHONPATH
+/path/to/isaacgym_py38/bin/python scripts/run_isaacgym_front110_common_dataset_v490.py \
+  --episodes 1 \
+  --steps 175 \
+  --seed 12001 \
+  --out-dir outputs/isaacgym_v490_common_smoke \
+  --common-dataset-out-dir dataset \
+  --common-dataset-stride 1 \
+  --common-dataset-validate
+```
+
+The common dataset files are written under `--out-dir/--common-dataset-out-dir`, for example:
+
+- `outputs/isaacgym_v490_common_smoke/dataset/isaacgym_common_episode_ep000.npz`
+- `outputs/isaacgym_v490_common_smoke/dataset/manifest_ep000.json`
+
 Use it inside a Dynamic_Gym runner:
 
 ```python
@@ -150,7 +185,14 @@ obs = adapter.get_observation(env_id=0)
 adapter.apply_action_to_targets(action, submit=False)
 ```
 
-The adapter layer is intended to make MuJoCo and IsaacGym data/action logs compatible for training. The IsaacGym backend now handles tensor/DOF/observation alignment; it is still not a standalone IsaacGym task runner by itself. To run a full IsaacGym rollout, call the adapter from the existing Dynamic_Gym v699/v490 runner loop.
+The adapter layer is intended to make MuJoCo and IsaacGym data/action logs compatible for training. The IsaacGym backend now handles tensor/DOF/observation alignment, and `scripts/run_isaacgym_front110_common_dataset_v490.py` shows the v490 runner loop wired to the common recorder without changing the original controller logic.
+
+The IsaacGym runner is an overlay for the original Dynamic_Gym project. A real
+IsaacGym rollout still requires the host machine to provide the Dynamic_Gym task
+definitions/configs, `isaacgymenvs`, IsaacGym, `torch`, `hydra`, and `omegaconf`
+in the same Python environment. The included smoke test validates the adapter
+without IsaacGym; the preflight script above checks the full host runtime before
+launching a rollout.
 
 ## Notes
 
