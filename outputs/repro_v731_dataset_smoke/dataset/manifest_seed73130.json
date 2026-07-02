@@ -1,0 +1,28 @@
+{
+  "schema_version": "front110_common_v1",
+  "simulator": "mujoco",
+  "episode_npz": "outputs/repro_v731_dataset_smoke/dataset/common_episode_seed73130.npz",
+  "action_space": "fr3_joint_target[7] + revo2_active_target[6]",
+  "quaternion_order": "wxyz",
+  "front_sector_deg": [
+    35.0,
+    145.0
+  ],
+  "nominal_front_arc_radius_m": 0.5,
+  "drop_xy_jitter_m": 0.04,
+  "tool": {
+    "length_m": 0.33,
+    "diameter_m": 0.03,
+    "mass_kg": 0.125,
+    "handle_positive_length_m": 0.11
+  },
+  "summary": {
+    "seed": 73130,
+    "passed": 1,
+    "total": 1,
+    "release_order_angles_deg": [
+      130.0
+    ],
+    "robot_mjcf": "/autodl-fs/data/mingyu/github_export/franka_revo2_mujoco_front110_v730/assets/full_robot_urdf_mirror/franka_brainco_revo2_right_aligned_visual_mjcf_v728.xml"
+  }
+}

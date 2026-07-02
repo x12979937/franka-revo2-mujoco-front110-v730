@@ -9,6 +9,7 @@ Compact reproduction package for the MuJoCo version of the front 110 degree aeri
 - v700 controller dependency: `scripts/render_front110_multi_clean_v700.py`
 - frozen stage-4 controller dependency: `frozen/stage4e_front110_v700_grid0p5_patch.py`
 - high-fidelity FR3/Revo2 visual/contact assets: `assets/full_robot_urdf_mirror/`
+- common planner/action/dataset adapter: `front110_core/`
 - validation artifacts:
   - `outputs/front110_v730_dense_1deg_batches_seed72900/dense_1deg_summary.json`
   - `outputs/front110_v730_grid9_clean_video/`
@@ -100,6 +101,40 @@ python scripts/render_front110_multi_clean_v731_midleft_redclearance_patch.py \
   --height 192 \
   --out-dir outputs/repro_v731_continuous_uniform12
 ```
+
+## Common Dataset Adapter
+
+`front110_core/` splits the task interface into simulator-independent data/action definitions and simulator-specific adapters:
+
+- `front110_core.planner.UnifiedAction`: common action emitted by planner/controller code.
+- Action space: `fr3_joint_target[7] + revo2_active_target[6]`.
+- Revo2 active joint order: `[thumb_flex, thumb_aux, index, middle, ring, pinky]`.
+- Common quaternion order: `wxyz`.
+- `front110_core.backends.mujoco_backend`: extracts low-dimensional MuJoCo observations and applies the legacy 11-DoF converted Revo2 target.
+- `front110_core.backends.isaacgym_backend`: IsaacGym position-target adapter contract, including `xyzw <-> wxyz` quaternion conversion.
+- `front110_core.dataset_adapter`: writes and validates `front110_common_v1` NPZ episodes plus JSON manifests.
+
+Generate a small aligned dataset sample:
+
+```bash
+export MUJOCO_GL=osmesa
+python scripts/render_front110_multi_clean_v731_midleft_redclearance_patch.py \
+  --seed 73130 \
+  --num-tools 1 \
+  --angles-deg 130 \
+  --yaws-deg 0 \
+  --fps 0 \
+  --dataset-out-dir outputs/repro_v731_dataset_smoke/dataset \
+  --dataset-stride 8 \
+  --out-dir outputs/repro_v731_dataset_smoke
+```
+
+Expected dataset files:
+
+- `outputs/repro_v731_dataset_smoke/dataset/common_episode_seed73130.npz`
+- `outputs/repro_v731_dataset_smoke/dataset/manifest_seed73130.json`
+
+The adapter layer is intended to make MuJoCo and IsaacGym data/action logs compatible for training. The IsaacGym backend here is the alignment layer and action/schema contract; it is not yet a complete IsaacGym task runner.
 
 ## Notes
 

@@ -1,0 +1,115 @@
+{
+  "seed": 73130,
+  "angles_deg": [
+    130.0
+  ],
+  "release_order_tool_indices": [
+    0
+  ],
+  "release_order_angles_deg": [
+    130.0
+  ],
+  "intervals_s": [
+    0.37
+  ],
+  "base_release_height_m": 1.35,
+  "release_heights_m": [
+    1.3813
+  ],
+  "release_delay_s": 0.08,
+  "reaction_delay_s": 0.06,
+  "videos": {},
+  "drops": [
+    {
+      "tool_index": 0,
+      "angle_deg": 130.0,
+      "control_angle_deg": 133.926,
+      "yaw_deg": 0.0,
+      "success": true,
+      "best_strict": 79,
+      "strict_total": 80,
+      "confirmed_hold": 60,
+      "required_strict": 50,
+      "required_confirm": 30,
+      "bad_functional_contact": false,
+      "min_z": 0.972,
+      "final_vz": -0.19,
+      "capture_time_s": 0.528,
+      "capture_z_m": 0.98,
+      "capture_vz_m_s": -0.013,
+      "capture_latch_age_s": 0.098,
+      "visible_hold_seconds": 0.12,
+      "post_capture_elapsed_s": 0.12,
+      "min_tip_dist_m": {
+        "thumb": 0.0161,
+        "index": 0.0083,
+        "middle": 0.004
+      },
+      "min_wrist_to_handle_m": 0.1891,
+      "hidden": true
+    }
+  ],
+  "passed": 1,
+  "total": 1,
+  "controller": "scripts/render_front110_multi_clean_v731_midleft_redclearance_patch.py",
+  "robot_mjcf": "/autodl-fs/data/mingyu/github_export/franka_revo2_mujoco_front110_v730/assets/full_robot_urdf_mirror/franka_brainco_revo2_right_aligned_visual_mjcf_v728.xml",
+  "drop_xy_offsets_m": [
+    [
+      -0.0345,
+      -0.0135
+    ]
+  ],
+  "visual_policy": "No target-specific arm motion before visible release: common ready only; helper/marker geoms hidden in video; true FR3/Revo2 visual meshes are rendered; after strict capture the rod remains visible in-hand before discard.",
+  "task_specs": {
+    "fr3_joint_vel_limit_rad_s": [
+      2.62,
+      2.62,
+      2.62,
+      2.62,
+      5.26,
+      4.18,
+      5.26
+    ],
+    "revo2_joint_vel_limit_rad_s_internal_11dof": [
+      2.62,
+      2.53,
+      2.53,
+      2.27,
+      2.27,
+      2.27,
+      2.27,
+      2.27,
+      2.27,
+      2.27,
+      2.27
+    ],
+    "revo2_active_joint_order_user": [
+      "thumb_flex",
+      "thumb_aux",
+      "index",
+      "middle",
+      "ring",
+      "pinky"
+    ],
+    "tool_total_length_m": 0.33,
+    "tool_diameter_m": 0.03,
+    "tool_mass_kg": 0.125,
+    "handle_positive_length_m": 0.11,
+    "functional_negative_length_m": 0.22,
+    "drop_xy_jitter_m": 0.04,
+    "yaw_random_range_deg": [
+      -10,
+      10
+    ],
+    "nominal_front_arc_radius_m": 0.5
+  },
+  "behavior": "v731 real-mesh observe-then-grasp planner with local 118-132deg dense-grid catch-height patch plus narrow 126-139deg red-clearance height patch: v725 edge-sector release-height timing with 0.12s strict visible physical hold. Mid-arc uses 1.35m release; hard edge angles get extra falling time without target-specific pre-release arm motion. Strict sustained opposing fingertip grasp, then active open-hand wrist/arm discard.",
+  "scene_xml": "outputs/repro_v731_dataset_smoke/front110_v731_midleft_redclearance_patch_scene.xml",
+  "dataset": {
+    "schema_version": "front110_common_v1",
+    "episode_npz": "outputs/repro_v731_dataset_smoke/dataset/common_episode_seed73130.npz",
+    "manifest": "outputs/repro_v731_dataset_smoke/dataset/manifest_seed73130.json",
+    "record_stride_steps": 8,
+    "validated": true
+  }
+}

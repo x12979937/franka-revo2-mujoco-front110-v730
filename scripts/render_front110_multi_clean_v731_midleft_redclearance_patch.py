@@ -11,6 +11,10 @@ import imageio.v2 as imageio
 import mujoco
 import numpy as np
 
+from front110_core.backends.mujoco_backend import extract_low_dim_observation
+from front110_core.dataset_adapter import EpisodeRecorder, build_manifest, contact_flags_array, validate_npz, write_manifest
+from front110_core.planner import UnifiedAction
+
 PROJECT = Path(__file__).resolve().parents[1]
 _spec = importlib.util.spec_from_file_location("multi700", Path(__file__).with_name("render_front110_multi_clean_v700.py"))
 multi = importlib.util.module_from_spec(_spec)
@@ -462,6 +466,38 @@ def run_demo(args):
     frame_tick = 0
     camera_names = ["full_body_three_quarter", "full_body_front_arc", "fall_path_high_arc", "side_reach_profile", "hand_window_close"]
     frames = {name: [] for name in camera_names}
+    recorder = EpisodeRecorder(len(angles)) if args.dataset_out_dir else None
+    dataset_stride = max(1, int(args.dataset_stride))
+    dataset_tick = 0
+    dataset_phase = "init"
+    dataset_cur = -1
+    dataset_contact = contact_flags_array(False, False, False)
+
+    def set_dataset_context(phase, cur=-1, contact_flags=None):
+        nonlocal dataset_phase, dataset_cur, dataset_contact
+        dataset_phase = str(phase)
+        dataset_cur = int(cur) if cur is not None else -1
+        if contact_flags is None:
+            dataset_contact = contact_flags_array(False, False, False)
+        else:
+            dataset_contact = np.asarray(contact_flags, dtype=np.bool_)
+
+    def record_dataset_if_due():
+        nonlocal dataset_tick
+        if recorder is None:
+            return
+        if dataset_tick % dataset_stride == 0:
+            obs = extract_low_dim_observation(model, data, wrist_bid, tool_bids, qadr, qvadr)
+            action = UnifiedAction.from_internal_hand(q_arm_cmd, q_hand_cmd, phase=dataset_phase)
+            recorder.append(
+                obs,
+                action,
+                phase=dataset_phase,
+                active_tool_index=dataset_cur,
+                contact_flags=dataset_contact,
+                sim_time_s=float(data.time),
+            )
+        dataset_tick += 1
 
     def freeze_tools(cur=None, current_mode="waiting"):
         for i, (pos, quat) in enumerate(initials):
@@ -489,6 +525,7 @@ def run_demo(args):
 
     def render_if_due():
         nonlocal frame_tick
+        record_dataset_if_due()
         if not record_video:
             frame_tick += 1
             return
@@ -501,6 +538,7 @@ def run_demo(args):
     def step_ready(seconds, cur=None):
         nonlocal q_arm_cmd, q_hand_cmd
         steps = int(seconds / dt)
+        set_dataset_context("ready", cur if cur is not None else -1)
         for _ in range(steps):
             freeze_tools(cur, "current_wait" if cur is not None else "waiting")
             q_arm_cmd = v700.limit_step(q_arm_cmd, common_ready_q, v700.FR3_VEL_LIMIT, dt)
@@ -518,6 +556,7 @@ def run_demo(args):
         # but must not move toward the known target-specific catch window.
         nonlocal q_arm_cmd, q_hand_cmd
         steps = int(args.prep_seconds / dt)
+        set_dataset_context("prep_common_ready", cur)
         for _ in range(steps):
             freeze_tools(cur, "current_wait")
             q_arm_cmd = v700.limit_step(q_arm_cmd, common_ready_q, v700.FR3_VEL_LIMIT, dt)
@@ -580,6 +619,7 @@ def run_demo(args):
         freeze_tools(cur, "current_wait")
         # Hold a shared ready pose through the visible pre-release settle; no target-specific IK.
         settle_steps = int(args.settle_seconds / dt)
+        set_dataset_context("settle_before_release", cur)
         for _ in range(settle_steps):
             freeze_tools(cur, "current_wait")
             q_arm_cmd = v700.limit_step(q_arm_cmd, common_ready_q, v700.FR3_VEL_LIMIT, dt)
@@ -628,10 +668,12 @@ def run_demo(args):
                 data.qpos[7:18] = q_hand_cmd
                 data.qvel[:18] = 0.0
             if local_t < grip_args.release_time:
+                set_dataset_context("wait_for_visible_release", cur)
                 freeze_tools(cur, "current_wait")
                 data.qpos[qadr[cur]:qadr[cur] + 7] = tool_initial_qpos
                 data.qvel[qvadr[cur]:qvadr[cur] + 6] = 0.0
             else:
+                set_dataset_context("intercept_or_hold", cur)
                 freeze_tools(cur, "active")
             mujoco.mj_forward(model, data)
             tau = local_t - grip_args.release_time
@@ -687,6 +729,7 @@ def run_demo(args):
             mujoco.mj_step(model, data)
             if local_t >= grip_args.release_time:
                 thumb_c, finger_c, bad = multi.contact_metrics_current(model, data, cur)
+                set_dataset_context("intercept_or_hold", cur, contact_flags_array(thumb_c, finger_c, bad))
                 any_bad = any_bad or bad
                 if thumb_c and finger_c and not bad:
                     if latch_time is None:
@@ -787,6 +830,7 @@ def run_demo(args):
         max_abs_vz = 0.0
         for step in range(steps):
             age = latch_age_start + step * dt
+            set_dataset_context("visible_physical_hold", cur)
             freeze_tools(cur, "active")
             _, hand_des, _, _ = grip_ref(
                 grip_args,
@@ -812,6 +856,7 @@ def run_demo(args):
             mujoco.mj_forward(model, data)
             mujoco.mj_step(model, data)
             thumb_c, finger_c, bad = multi.contact_metrics_current(model, data, cur)
+            set_dataset_context("visible_physical_hold", cur, contact_flags_array(thumb_c, finger_c, bad))
             if thumb_c and finger_c and not bad:
                 strict_hold += 1
             bad_hold = bad_hold or bad
@@ -833,6 +878,7 @@ def run_demo(args):
         make_xmat = multi.make_wrist_xmat_fn(data, wrist_bid, grip_args, control_angle)
         make_xmat = fixed_wrist_xmat_fn(grip_args, control_angle)
         steps = int(args.discard_seconds / dt)
+        set_dataset_context("discard_old_tool", cur)
         for step in range(steps):
             age = step * dt
             freeze_tools(cur, "active")
@@ -906,6 +952,22 @@ def run_demo(args):
         "behavior": "v731 real-mesh observe-then-grasp planner with local 118-132deg dense-grid catch-height patch plus 126-139deg mid-left red-clearance lift: v725 edge-sector release-height timing with 0.12s strict visible physical hold. Mid-arc uses 1.35m release; hard edge angles get extra falling time without target-specific pre-release arm motion. Strict sustained opposing fingertip grasp, then active open-hand wrist/arm discard.",
         "scene_xml": str(scene_xml),
     }
+    if recorder is not None:
+        dataset_dir = Path(args.dataset_out_dir)
+        episode_npz = dataset_dir / f"common_episode_seed{args.seed}.npz"
+        recorder.save_npz(episode_npz)
+        validate_npz(episode_npz)
+        manifest = build_manifest(summary, episode_npz, simulator="mujoco")
+        manifest_path = dataset_dir / f"manifest_seed{args.seed}.json"
+        write_manifest(manifest_path, manifest)
+        summary["dataset"] = {
+            "schema_version": manifest["schema_version"],
+            "episode_npz": str(episode_npz),
+            "manifest": str(manifest_path),
+            "validated": True,
+            "stride": dataset_stride,
+            "action_space": manifest["action_space"],
+        }
     (out / f"front110_v728_front110_grid9_clean_realrobot_seed{args.seed}.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")
     print(json.dumps(summary, indent=2), flush=True)
 
@@ -979,6 +1041,8 @@ def main():
     ap.add_argument("--early-capture-on-confirm", action="store_true", default=True)
     ap.add_argument("--capture-min-z", type=float, default=0.55)
     ap.add_argument("--capture-max-abs-vz", type=float, default=0.75)
+    ap.add_argument("--dataset-out-dir", default="")
+    ap.add_argument("--dataset-stride", type=int, default=4)
     ap.add_argument("--out-dir", default=str(OUT))
     run_demo(ap.parse_args())
 
