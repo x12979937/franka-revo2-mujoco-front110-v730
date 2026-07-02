@@ -111,7 +111,7 @@ python scripts/render_front110_multi_clean_v731_midleft_redclearance_patch.py \
 - Revo2 active joint order: `[thumb_flex, thumb_aux, index, middle, ring, pinky]`.
 - Common quaternion order: `wxyz`.
 - `front110_core.backends.mujoco_backend`: extracts low-dimensional MuJoCo observations and applies the legacy 11-DoF converted Revo2 target.
-- `front110_core.backends.isaacgym_backend`: IsaacGym position-target adapter contract, including `xyzw <-> wxyz` quaternion conversion.
+- `front110_core.backends.isaacgym_backend`: IsaacGym tensor adapter for Dynamic_Gym-style envs, including FR3/Revo2 DOF mapping, `cur_targets` writes, root/body tensor observation export, and `xyzw <-> wxyz` quaternion conversion.
 - `front110_core.dataset_adapter`: writes and validates `front110_common_v1` NPZ episodes plus JSON manifests.
 
 Generate a small aligned dataset sample:
@@ -134,7 +134,23 @@ Expected dataset files:
 - `outputs/repro_v731_dataset_smoke/dataset/common_episode_seed73130.npz`
 - `outputs/repro_v731_dataset_smoke/dataset/manifest_seed73130.json`
 
-The adapter layer is intended to make MuJoCo and IsaacGym data/action logs compatible for training. The IsaacGym backend here is the alignment layer and action/schema contract; it is not yet a complete IsaacGym task runner.
+Smoke-test the IsaacGym tensor bridge without launching IsaacGym:
+
+```bash
+python scripts/smoke_isaacgym_adapter.py
+```
+
+Use it inside a Dynamic_Gym runner:
+
+```python
+from front110_core.backends.isaacgym_backend import IsaacGymTensorAdapter
+
+adapter = IsaacGymTensorAdapter.from_env(env)
+obs = adapter.get_observation(env_id=0)
+adapter.apply_action_to_targets(action, submit=False)
+```
+
+The adapter layer is intended to make MuJoCo and IsaacGym data/action logs compatible for training. The IsaacGym backend now handles tensor/DOF/observation alignment; it is still not a standalone IsaacGym task runner by itself. To run a full IsaacGym rollout, call the adapter from the existing Dynamic_Gym v699/v490 runner loop.
 
 ## Notes
 
