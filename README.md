@@ -158,8 +158,11 @@ export PYTHONPATH=/path/to/Dynamic_Gym/src/Dynamic_Gym-sim-env-franka-revo2-aeri
 Run the v490 IsaacGym runner with common-schema dataset export:
 
 ```bash
+export PATH=/path/to/isaacgym_py38/bin:$PATH
 export LD_LIBRARY_PATH=/path/to/isaacgym_py38/lib:$LD_LIBRARY_PATH
-export PYTHONPATH=/path/to/Dynamic_Gym/src/Dynamic_Gym-sim-env-franka-revo2-aerial-v1:/path/to/isaacgymenvs_parent:$PYTHONPATH
+export DYNAMIC_GYM_ROOT=/path/to/Dynamic_Gym/src/Dynamic_Gym-sim-env-franka-revo2-aerial-v1
+export ISAACGYM_ASSET_BASE=$DYNAMIC_GYM_ROOT
+export PYTHONPATH=$PWD:$DYNAMIC_GYM_ROOT:$DYNAMIC_GYM_ROOT/isaacgymenvs:/path/to/isaacgym_preview4/python:$PYTHONPATH
 /path/to/isaacgym_py38/bin/python scripts/run_isaacgym_front110_common_dataset_v490.py \
   --episodes 1 \
   --steps 175 \
@@ -174,6 +177,11 @@ The common dataset files are written under `--out-dir/--common-dataset-out-dir`,
 
 - `outputs/isaacgym_v490_common_smoke/dataset/isaacgym_common_episode_ep000.npz`
 - `outputs/isaacgym_v490_common_smoke/dataset/manifest_ep000.json`
+
+`PATH` must include the IsaacGym environment `bin/` directory because `gymtorch`
+loads a PyTorch C++ extension through `ninja`. `DYNAMIC_GYM_ROOT` points Hydra to
+the real Dynamic_Gym configs; `ISAACGYM_ASSET_BASE` points the runner to the
+IsaacGym URDF/mesh assets.
 
 Use it inside a Dynamic_Gym runner:
 
